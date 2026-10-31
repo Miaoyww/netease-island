@@ -9,7 +9,7 @@ import {
   usePluginEvent,
   usePluginConfig,
   type PluginSong
-} from '@app/plugin-sdk'
+} from '@nonsplayer/plugin-sdk'
 
 export function DynamicIsland() {
   const config = usePluginConfig()

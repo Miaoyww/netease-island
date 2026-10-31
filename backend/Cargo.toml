@@ -16,7 +16,7 @@ regex = "1"
 package = "nons:plugin"
 
 [package.metadata.component.target]
-path = "../../wit"
+path = "../node_modules/@nonsplayer/plugin-sdk/wit"
 world = "plugin"
 
 [profile.release]

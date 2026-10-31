@@ -1,0 +1,22 @@
+{
+  "name": "nons-plugin-netease-island",
+  "private": true,
+  "version": "1.3.0",
+  "type": "module",
+  "packageManager": "pnpm@11.20.0",
+  "scripts": {
+    "build": "nons-plugin build",
+    "test": "node --test tests/*.test.mjs && cargo test --manifest-path backend/Cargo.toml --locked",
+    "format": "prettier --write . --ignore-unknown && cargo fmt --manifest-path backend/Cargo.toml",
+    "format:check": "prettier --check . --ignore-unknown && cargo fmt --manifest-path backend/Cargo.toml -- --check"
+  },
+  "devDependencies": {
+    "@nonsplayer/plugin-sdk": "^2.1.0",
+    "@types/react": "^19.1.8",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "jsdom": "^30.1.2",
+    "typescript": "~6.0.3",
+    "prettier": "3.9.9"
+  }
+}
