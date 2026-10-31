@@ -30,5 +30,6 @@
     "pages": [],
     "navigation": []
   },
-  "httpHosts": ["music.163.com", "y.music.163.com", "m.music.163.com", "163cn.tv"]
+  "httpHosts": ["music.163.com", "y.music.163.com", "m.music.163.com", "163cn.tv"],
+  "repository": "https://github.com/Miaoyww/netease-island"
 }
