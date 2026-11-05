@@ -4,7 +4,7 @@ NonsPlayer 功能插件：识别剪贴板中的网易云歌曲链接与官方短
 
 ## 构建与验证
 
-要求 Node.js 22 或更新版本、pnpm 11、Rust 1.95 和 cargo-component 0.21.1。
+要求 Node.js 22.22.2+ 或 24.15+（与锁文件兼容）、pnpm 11、Rust 1.95 和 cargo-component 0.21.1。
 
 ```powershell
 cargo install cargo-component --version 0.21.1 --locked
@@ -16,11 +16,21 @@ pnpm build
 pnpm format:check
 ```
 
-公开依赖为 `@nonsplayer/plugin-sdk`，前端使用其 React API，Rust Component 从该包的 `wit/` 读取宿主契约。构建无需 NonsPlayer 源码目录。`pnpm build` 校验 TypeScript、Manifest 与产物，在 `dist/` 生成插件文件，在仓库根目录生成 `netease-island-<版本>.zip`。
+插件依赖宿主插件 API 3／UI API 3。由于 SDK 3 尚未发布，`@nonsplayer/plugin-sdk` 以 `file:../../Nons/packages/plugin-sdk` 引用 Nons 源码检出，锁文件记录该目录解析，不保留 patch。检出目录必须保持以下布局（`Nons` 与 `repos` 同级）：
+
+```text
+<工作区>/
+├── Nons/
+│   └── packages/plugin-sdk/
+└── repos/
+    └── netease-island/
+```
+
+前端使用该包的 React API，Rust Component 从该包的 `wit/` 读取宿主契约。`pnpm build` 校验 TypeScript、Manifest 与产物，在 `dist/` 生成插件文件，在仓库根目录生成 `netease-island-<版本>.zip`。
 
 ## 安装与配置
 
-在 NonsPlayer 设置 → 插件中安装 ZIP，并确认剪贴板、HTTP、音乐元数据、播放控制、界面及配置权限。插件仅向 Manifest 声明的网易云域名请求链接解析；音乐查询与播放通过宿主公开能力执行。
+在 NonsPlayer 设置 → 插件中安装 ZIP，并确认剪贴板、音乐元数据、播放控制、界面及配置权限。插件 API 3 默认开放网络请求，Manifest 不再声明 `httpHosts` 或 `http:request`。插件自身仍只允许向 `music.163.com`、`y.music.163.com`、`m.music.163.com` 和 `163cn.tv` 发起短链解析，并逐跳校验跳转后的网易云域名；音乐查询与播放通过宿主公开能力执行。
 
 配置支持分享识别、预览时长和悬停保持。测试覆盖链接与短链校验、预览交互、播放去重和卸载清理；真实系统剪贴板、账号收藏与播放仍需在 NonsPlayer 中验收。
 

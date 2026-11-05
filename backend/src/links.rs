@@ -51,8 +51,7 @@ pub fn song_id(url: &Url) -> Option<u64> {
     })
 }
 
-// One event shares at most three HTTP requests. With 500ms each, song lookup
-// retains its 3s budget inside the host's 5s guest execution deadline.
+// One event shares at most three HTTP requests across all candidate links.
 pub fn resolve(
     mut url: Url,
     remaining: &mut usize,
@@ -70,7 +69,7 @@ pub fn resolve(
         }
         *remaining -= 1;
         let response = request(
-            &json!({"url":url.as_str(),"method":"GET","responseType":"none","timeoutMs":500}),
+            &json!({"url":url.as_str(),"method":"GET","responseType":"none","followRedirects":false}),
         )?;
         let status = response["status"].as_u64().ok_or("无效 HTTP 状态")?;
         if !(300..400).contains(&status) {
@@ -121,6 +120,9 @@ mod tests {
         let result = resolve(Url::parse("https://163cn.tv/abc").unwrap(), &mut remaining, |args| {
             calls += 1;
             assert_eq!(args["responseType"], "none");
+            assert_eq!(args["method"], "GET");
+            assert_eq!(args["followRedirects"], false);
+            assert!(args.get("timeoutMs").is_none());
             Ok(json!({"status":302,"headers":{"location":"https://music.163.com/#/song?id=123"}}))
         }).unwrap();
         assert_eq!(song_id(&result), Some(123));
