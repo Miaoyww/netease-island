@@ -1,12 +1,11 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { test } from 'node:test'
 
 const manifest = JSON.parse(readFileSync(new URL('../manifest.json', import.meta.url), 'utf8'))
 const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
-const sdkPackage = JSON.parse(
-  readFileSync(new URL('../../../Nons/packages/plugin-sdk/package.json', import.meta.url), 'utf8')
-)
+const sdkPackage = createRequire(import.meta.url)('@nonsplayer/plugin-sdk/package.json')
 const lock = readFileSync(new URL('../pnpm-lock.yaml', import.meta.url), 'utf8')
 
 test('manifest matches the package and plugin/UI API 3 contract', () => {
@@ -31,13 +30,8 @@ test('manifest matches the package and plugin/UI API 3 contract', () => {
     'ui',
     'config'
   ])
-  assert.equal(
-    packageJson.devDependencies['@nonsplayer/plugin-sdk'],
-    'file:../../Nons/packages/plugin-sdk'
-  )
-  assert.match(
-    lock,
-    /resolution: \{\s*directory: \.\.\/\.\.\/Nons\/packages\/plugin-sdk, type: directory\s*\}/
-  )
+  assert.equal(packageJson.devDependencies['@nonsplayer/plugin-sdk'], '3.0.0')
+  assert.ok(lock.includes("'@nonsplayer/plugin-sdk@3.0.0':"))
+  assert.equal(lock.includes('@nonsplayer/plugin-sdk@file:'), false)
   assert.equal(lock.includes('patch_hash'), false)
 })

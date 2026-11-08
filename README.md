@@ -16,17 +16,11 @@ pnpm build
 pnpm format:check
 ```
 
-插件依赖宿主插件 API 3／UI API 3。由于 SDK 3 尚未发布，`@nonsplayer/plugin-sdk` 以 `file:../../Nons/packages/plugin-sdk` 引用 Nons 源码检出，锁文件记录该目录解析，不保留 patch。检出目录必须保持以下布局（`Nons` 与 `repos` 同级）：
-
-```text
-<工作区>/
-├── Nons/
-│   └── packages/plugin-sdk/
-└── repos/
-    └── netease-island/
-```
+插件依赖宿主插件 API 3／UI API 3。开发依赖使用 npm 发布的 `@nonsplayer/plugin-sdk@3.0.0`，按锁文件安装即可，无需检出 Nons 源码。
 
 前端使用该包的 React API，Rust Component 从该包的 `wit/` 读取宿主契约。`pnpm build` 校验 TypeScript、Manifest 与产物，在 `dist/` 生成插件文件，在仓库根目录生成 `netease-island-<版本>.zip`。
+
+仓库未配置自动构建或发布工作流，Rust 后端及完整插件 ZIP 由维护者在本地构建后上传。
 
 ## 安装与配置
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- 开发依赖改用 npm 发布的插件 SDK 3.0.0，前端类型和 Rust 后端 WIT 均从安装包读取，无需检出 Nons 源码。
+
 ## [2.0.0] - 2026-11-05
 
 ### Breaking
